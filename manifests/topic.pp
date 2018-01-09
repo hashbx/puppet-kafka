@@ -11,6 +11,7 @@ define kafka::topic(
   $zookeeper          = '',
   $replication_factor = 1,
   $partitions         = 1,
+  $extra_options      = '',
   $bin_dir            = '/opt/kafka/bin',
 ) {
 
@@ -21,7 +22,7 @@ define kafka::topic(
   if $ensure == 'present' {
     exec { "create topic ${name}":
       path    => "/usr/bin:/usr/sbin/:/bin:/sbin:${bin_dir}",
-      command => "kafka-topics.sh --create ${_zookeeper} ${_replication_factor} ${_partitions} --topic ${name}",
+      command => "kafka-topics.sh --create ${_zookeeper} ${_replication_factor} ${_partitions} --topic ${name} ${extra_options}",
       unless  => "kafka-topics.sh --list ${_zookeeper} | grep -x ${name}",
     }
   }
